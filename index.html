@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>การ์ดวันแม่ - ความรักจากลูก</title>
+    <style>
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ffc0cb 0%, #ffeef5 50%, #fff0f5 100%);
+            min-height: 100vh; 
+            overflow-x: hidden; 
+            position: relative;
+        }
+        
+        /* หน้าปก */
+        .cover-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: linear-gradient(135deg, #ffc0cb 0%, #ffeef5 30%, #fff0f5 70%, #fce4ec 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+            overflow: hidden;
+        }
+        
+        .cover-page::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><radialGradient id="sparkle" cx="50%" cy="50%" r="50%"><stop offset="0%" style="stop-color:rgba(255,255,255,0.8)"/><stop offset="100%" style="stop-color:rgba(255,255,255,0)"/></radialGradient></defs><circle cx="20" cy="20" r="1" fill="url(%23sparkle)"/><circle cx="80" cy="30" r="0.8" fill="url(%23sparkle)"/><circle cx="30" cy="70" r="1.2" fill="url(%23sparkle)"/><circle cx="70" cy="80" r="0.6" fill="url(%23sparkle)"/><circle cx="50" cy="10" r="0.4" fill="url(%23sparkle)"/></svg>') repeat;
+            opacity: 0.3;
+            animation: sparkleMove 20s linear infinite;
+            pointer-events: none;
+        }
+        
+        @keyframes sparkleMove {
+            0% { transform: translateX(0) translateY(0); }
+            100% { transform: translateX(-100px) translateY(-100px); }
+        }
+        
+        .cover-page.hidden {
+            transform: translateY(-100%);
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .cover-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            box-shadow: 0 30px 60px rgba(255, 182, 193, 0.4), 
+                        0 0 0 1px rgba(255, 255, 255, 0.5);
+            padding: 80px 50px;
+            text-align: center;
+            transform: translateY(50px);
+            animation: coverSlideUp 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            max-width: 600px;
+            width: 90%;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cover-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+            animation: shimmer 3s ease-in-out infinite;
+            pointer-events: none;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+        
+        @keyframes coverSlideUp {
+            to { transform: translateY(0) scale(1); }
+        }
+        
+        .cover-title {
+            font-size: 4em;
+            background: linear-gradient(45deg, #e91e63, #f8bbd9, #e91e63);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: none;
+            margin-bottom: 30px;
+            animation: titleGradient 3s ease-in-out infinite, titleFloat 4s ease-in-out infinite;
+            position: relative;
+            font-weight: bold;
+        }
+        
+        @keyframes titleGradient {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        @keyframes titleFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        
+        .cover-subtitle {
+            font-size: 1.6em;
+            color: #ad1457;
+            margin-bottom: 50px;
+            opacity: 0.9;
+            animation: subtitlePulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes subtitlePulse {
+            0%, 100% { opacity: 0.9; }
+            50% { opacity: 1; }
+        }
+        
+        .cover-decorations {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        
+        .cover-decoration {
+            font-size: 3.5em;
+            animation: bounce 2s ease-in-out infinite;
+            filter: drop-shadow(0 4px 8px rgba(255, 182, 193, 0.3));
+        }
+        
+        .cover-decoration:nth-child(1) { animation-delay: 0s; }
+        .cover-decoration:nth-child(2) { animation-delay: 0.2s; }
+        .cover-decoration:nth-child(3) { animation-delay: 0.4s; }
+        .cover-decoration:nth-child(4) { animation-delay: 0.6s; }
+        .cover-decoration:nth-child(5) { animation-delay: 0.8s; }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-15px) scale(1.1); }
+        }
+        
+        .open-button {
+            background: linear-gradient(45deg, #e91e63, #f48fb1, #e91e63);
+            background-size: 200% 200%;
+            color: white;
+            padding: 25px 50px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.4em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            box-shadow: 0 10px 30px rgba(233, 30, 99, 0.4),
+                        0 0 0 2px rgba(255, 255, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            animation: buttonGlow 2s ease-in-out infinite;
+        }
+        
+        @keyframes buttonGlow {
+            0%, 100% { 
+                box-shadow: 0 10px 30px rgba(233, 30, 99, 0.4),
+                           0 0 0 2px rgba(255, 255, 255, 0.3);
+            }
+            50% { 
+                box-shadow: 0 15px 40px rgba(233, 30, 99, 0.6),
+                           0 0 0 3px rgba(255, 255, 255, 0.5),
+                           0 0 20px rgba(233, 30, 99, 0.3);
+            }
+        }
+        
+        .open-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+            transition: left 0.6s;
+        }
+        
+        .open-button::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 10px;
+            transform: translateY(-50%);
+            font-size: 1.2em;
+            animation: sparkle 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes sparkle {
+            0%, 100% { opacity: 1; transform: translateY(-50%) scale(1); }
+            50% { opacity: 0.7; transform: translateY(-50%) scale(1.2); }
+        }
+        
+        .open-button:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 20px 50px rgba(233, 30, 99, 0.6),
+                        0 0 0 3px rgba(255, 255, 255, 0.5),
+                        0 0 30px rgba(233, 30, 99, 0.4);
+            background-position: 100% 0;
+        }
+        
+        .open-button:hover::before {
+            left: 100%;
+        }
+        
+        .open-button:active {
+            transform: translateY(-2px) scale(1.02);
+        }
+        
+        /* หัวใจลอยในหน้าปก */
+        .cover-heart {
+            position: absolute;
+            font-size: 25px;
+            color: rgba(255, 182, 193, 0.4);
+            animation: coverFloating 8s ease-in-out infinite;
+            pointer-events: none;
+        }
+        
+        @keyframes coverFloating {
+            0%, 100% { transform: translateY(100vh) scale(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; transform: translateY(80vh) scale(1) rotate(0deg); }
+            90% { opacity: 1; transform: translateY(-10vh) scale(1) rotate(360deg); }
+        }
+        
+        /* หน้าหลัก */
+        .main-content {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 1s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        
+        .main-content.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .heart {
+            position: absolute; 
+            font-size: 20px; 
+            color: rgba(255, 182, 193, 0.5);
+            animation: floating 6s ease-in-out infinite; 
+            pointer-events: none;
+        }
+        
+        @keyframes floating {
+            0%, 100% { transform: translateY(100vh) scale(0); opacity: 0; }
+            10% { opacity: 1; transform: translateY(90vh) scale(1); }
+            90% { opacity: 1; transform: translateY(-10vh) scale(1); }
+        }
+        
+        .container { 
+            max-width: 800px; 
+            margin: 0 auto; 
+            padding: 20px; 
+            position: relative; 
+            z-index: 10; 
+        }
+        
+        .card {
+            background: white; 
+            border-radius: 20px; 
+            box-shadow: 0 20px 40px rgba(255, 182, 193, 0.15);
+            margin: 20px auto; 
+            overflow: hidden; 
+            transform: translateY(50px);
+            animation: slideUp 1s ease-out forwards;
+        }
+        
+        @keyframes slideUp { 
+            to { transform: translateY(0); } 
+        }
+        
+        .card-header {
+            background: linear-gradient(45deg, #f8bbd9, #fce4ec); 
+            padding: 40px 20px; 
+            text-align: center; 
+            position: relative;
+        }
+        
+        .main-title {
+            font-size: 4.5em; 
+            color: #ad1457; 
+            text-shadow: 1px 1px 3px rgba(173, 20, 87, 0.2);
+            margin-bottom: 10px; 
+            position: relative; 
+            z-index: 1;
+        }
+        
+        .subtitle {
+            font-size: 1.2em; 
+            color: #ad1457; 
+            opacity: 0.8;
+            position: relative; 
+            z-index: 1;
+        }
+        
+        .card-body { 
+            padding: 40px; 
+            text-align: center; 
+        }
+        
+        .message {
+            font-size: 1.3em; 
+            line-height: 1.8; 
+            color: #333; 
+            margin-bottom: 30px;
+            animation: fadeIn 2s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .interactive-section {
+            margin: 30px 0; 
+            padding: 20px; 
+            background: linear-gradient(135deg, #fff0f5, #ffeef5);
+            border-radius: 15px; 
+            border: 2px solid #f8bbd9;
+        }
+        
+        .btn {
+            background: linear-gradient(45deg, #f8bbd9, #fce4ec); 
+            color: #ad1457; 
+            padding: 15px 30px;
+            border: none; 
+            border-radius: 25px; 
+            font-size: 1.1em; 
+            cursor: pointer; 
+            margin: 10px;
+            transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1); 
+            box-shadow: 0 5px 15px rgba(248, 187, 217, 0.3);
+            font-weight: 600;
+        }
+        
+        .btn:hover { 
+            transform: translateY(-3px); 
+            box-shadow: 0 8px 25px rgba(248, 187, 217, 0.4); 
+        }
+        
+        .btn:active { 
+            transform: translateY(0); 
+        }
+        
+        .surprise-message {
+            display: none; 
+            background: #fff3f5; 
+            padding: 20px; 
+            border-radius: 15px;
+            border-left: 5px solid #f8bbd9; 
+            margin: 20px 0; 
+            animation: popIn 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .gift-btn {
+            background: linear-gradient(45deg, #f8bbd9, #fce4ec); 
+            color: #ad1457; 
+            margin-top: 15px;
+            animation: giftPulse 2s ease-in-out infinite;
+        }
+        
+        .gift-btn:hover {
+            background: linear-gradient(45deg, #f48fb1, #f8bbd9);
+            transform: translateY(-3px); 
+            box-shadow: 0 8px 25px rgba(248, 187, 217, 0.4); 
+        }
+        
+        @keyframes giftPulse {
+            0%, 100% { box-shadow: 0 5px 15px rgba(248, 187, 217, 0.3); }
+            50% { box-shadow: 0 8px 25px rgba(248, 187, 217, 0.5); }
+        }
+        
+        .surprise-message.special-message {
+            background: #fff0f5 !important;
+            border-left: 5px solid #fce4ec !important;
+            animation: popIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        
+        .gift-section {
+            padding: 20px;
+            background: linear-gradient(135deg, #fff0f5, #ffeef5);
+            border-radius: 12px;
+            margin-top: 20px;
+            border: 2px dashed #f8bbd9;
+            animation: fadeInUp 0.8s ease-out;
+        }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .photo-frame {
+            width: 200px; 
+            height: 200px; 
+            border: 10px solid #f8bbd9; 
+            border-radius: 50%;
+            margin: 20px auto; 
+            background: linear-gradient(45deg, #ffeaa7, #fab1a0);
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 4em;
+            animation: rotate 10s linear infinite; 
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .photo-frame:hover {
+            transform: scale(1.05);
+        }
+        
+        @keyframes rotate { 
+            from { transform: rotate(0deg); } 
+            to { transform: rotate(360deg); } 
+        }
+        
+        .footer {
+            text-align: center; 
+            padding: 30px; 
+            background: #fef7ff; 
+            color: #666; 
+            font-size: 0.9em;
+        }
+        
+        .emoji-rain {
+            position: fixed; 
+            top: -50px; 
+            font-size: 35px; 
+            animation: fall 4s linear infinite;
+            pointer-events: none; 
+            z-index: 1000;
+        }
+        
+        @keyframes fall { 
+            0% { transform: translateY(-50px) rotate(0deg); }
+            100% { transform: translateY(100vh) rotate(360deg); }
+        }
+        
+        @media (max-width: 600px) {
+            .cover-title { 
+                font-size: 2.8em; 
+                line-height: 1.1;
+            }
+            .cover-card { 
+                padding: 50px 30px; 
+                margin: 0 10px;
+            }
+            .cover-decorations {
+                gap: 15px;
+            }
+            .cover-decoration {
+                font-size: 2.8em;
+            }
+            .cover-subtitle {
+                font-size: 1.3em;
+            }
+            .open-button { 
+                padding: 20px 40px; 
+                font-size: 1.2em; 
+                margin-top: 20px;
+            }
+            .main-title { font-size: 2em; }
+            .card-body { padding: 20px; }
+            .message { font-size: 1.1em; }
+        }
+        
+        /* Performance optimizations */
+        .cover-page, .main-content {
+            will-change: transform, opacity;
+        }
+        
+        .heart, .cover-heart, .emoji-rain {
+            will-change: transform;
+        }
+        
+        .photo-frame {
+            will-change: transform;
+        }
+    </style>
+</head>
+<body>
+    <div class="cover-page" id="coverPage">
+        <div class="cover-card">
+            <div class="cover-decorations">
+                <div class="cover-decoration">💐</div>
+                <div class="cover-decoration">💐</div>
+                <div class="cover-decoration"></div>
+                <div class="cover-decoration">💐</div>
+                <div class="cover-decoration">💐</div>
+            </div>
+            <h1 class="cover-title">การ์ดวันแม่</h1>
+            <p class="cover-subtitle">ความรักพิเศษจากลูก</p>
+            <div style="font-size: 2.5em; margin: 20px 0; opacity: 0.8;">💌</div>
+            <button class="open-button" id="openCardBtn">
+                เปิดการ์ด
+            </button>
+        </div>
+    </div>
+
+    <div class="main-content" id="mainContent">
+        <div class="container">
+            <div class="card">
+                <div class="card-header">
+                    <h1 class="main-title">สุขสันต์วันแม่</h1>
+                    <p class="subtitle">ด้วยรักและกตัญญู จากลูก</p>
+                </div>
+                
+                <div class="card-body">
+                    <div class="photo-frame" id="photoFrame">💝</div>
+                    
+                    <div class="message" id="mainMessage">
+                        รักที่สุดของที่สุด<br>
+                        ทำเองกับมือออ byพลับพลีส<br>
+                        วันนี้อยากบอกว่า  รักแม่มากๆๆๆๆๆ ที่จริงก็รักทุกวันนั่นแหละ<br>
+                        ขอบคุณแม่สำหรับทุกสิ่งที่ให้มา
+                    </div>
+
+                    <div class="interactive-section">
+                        <h3>🌸กดปุ่มเปิดของขวัญพิเศษ🌸</h3>
+                        <button class="btn gift-btn" onclick="openGift()">🎁 เปิดของขวัญ</button>
+                    </div>
+
+                    <div class="surprise-message" id="surpriseBox">
+                        <h3>ข้อความพิเศษจากลูก</h3>
+                        <p>ขอบคุณแม่ทุกอย่างที่คอยซัพพอร์ต และให้กำลังใจเสมอมา แม่คือผู้หญิงที่ดีที่สุดสำหรับลูก ❤️</p>
+                        
+                        <div class="gift-section" id="secondGiftSection" style="display: none;">
+                            <h4 style="margin-top: 25px; color: #e91e63;">🎁 ยังมีของขวัญอีกกล่องนึง</h4>
+                            <button class="btn gift-btn" onclick="openSecondGift()">🎀 เปิดกล่องที่ 2</button>
+                        </div>
+                    </div>
+
+                    <div class="surprise-message special-message" id="secondSurpriseBox" style="display: none;">
+                        <h3> ข้อความลับพิเศษ</h3>
+                        <p style="font-size: 1.1em; line-height: 1.6;">ลูกภูมิใจมากๆ ที่เป็นลูกของแม่ ขอบคุณแม่ที่สอนให้ลูกเป็นคนดี มีน้ำใจ และรู้จักรักและให้อภัย แม่คือแรงบันดาลใจของลูกทุกวัน และลูกจะพยายามเป็นคนดีให้แม่ภูมิใจตลอดไป 🌈✨</p>
+                        
+                        <div class="gift-section" id="thirdGiftSection" style="display: none;">
+                            <h4 style="margin-top: 25px; color: #ad1457;">🎁 กล่องที่สามมมม</h4>
+                            <button class="btn gift-btn" onclick="openThirdGift()">🎉 เปิดกล่องที่ 3</button>
+                        </div>
+                    </div>
+                    
+                    <div class="surprise-message special-message" id="thirdSurpriseBox" style="display: none;">
+                        <h3>💌 ลับสุดยอด</h3>
+                        <p style="font-size: 1.9em; line-height: 1.8; color: #e91e63; font-weight: bold;">รักแม่มากๆๆๆ</p>
+                        
+                        <div class="gift-section" id="fourthGiftSection" style="display: none;">
+                            <h4 style="margin-top: 25px; color: #ad1457;">🎁 กล่องสุดท้าย🥹</h4>
+                            <button class="btn gift-btn" onclick="openFourthGift()">💖 เปิดกล่องสุดท้ายยยย</button>
+                        </div>
+                    </div>
+
+                    <div class="surprise-message special-message" id="fourthSurpriseBox" style="display: none;">
+                        <h3>กล่องทุดท้ายที่อยากบอก</h3>
+                        <p style="font-size: 3.8em; line-height: 3.8; color: #ad1457; font-weight: bold;">รักแม่ ที่สุ๊ดดดดดดดด💖</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer">
+                <p>💝ทำด้วยความรักจากลูกเลยเด้หนิ อิอิ
+ | Happy Mother's Day 2025 💝</p>
+                <p style="margin-top: 10px; font-size: 0.8em;">love mom</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Performance optimized functions
+        let heartInterval, coverHeartInterval, messageInterval;
+        let isMainPageVisible = false;
+
+        // เปิดการ์ดจากหน้าปก
+        document.getElementById('openCardBtn').addEventListener('click', () => {
+            document.getElementById('coverPage').classList.add('hidden');
+            setTimeout(() => {
+                const mainContent = document.getElementById('mainContent');
+                mainContent.style.display = 'block';
+                setTimeout(() => {
+                    mainContent.classList.add('visible');
+                    isMainPageVisible = true;
+                    startFloatingHearts();
+                }, 50); // Small delay to trigger transition
+            }, 800); // Wait for the cover page transition to finish
+        });
+
+        // สร้างหัวใจลอยขึ้นมาบนหน้าปก
+        function createCoverHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('cover-heart');
+            heart.innerHTML = '💌';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = Math.random() * 2 + 1 + 's';
+            heart.style.animationDelay = Math.random() * 1 + 's';
+            document.getElementById('coverPage').appendChild(heart);
+            setTimeout(() => heart.remove(), 8000);
+        }
+
+        // เริ่มสร้างหัวใจลอยบนหน้าปก
+        coverHeartInterval = setInterval(createCoverHeart, 500);
+
+        // สร้างหัวใจลอยบนหน้าหลัก
+        function createHeart() {
+            if (!isMainPageVisible) return;
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.innerHTML = '🤍';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = Math.random() * 4 + 4 + 's';
+            heart.style.animationDelay = Math.random() * 2 + 's';
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 6000);
+        }
+
+        function startFloatingHearts() {
+            heartInterval = setInterval(createHeart, 300);
+            
+            setTimeout(() => {
+                const emoji = document.createElement('div');
+                emoji.classList.add('emoji-rain');
+                emoji.innerHTML = '🌸';
+                emoji.style.left = Math.random() * 100 + 'vw';
+                emoji.style.animationDuration = Math.random() * 3 + 2 + 's';
+                document.body.appendChild(emoji);
+                setTimeout(() => emoji.remove(), 5000);
+            }, 1000);
+        }
+
+        // ฟังก์ชันสำหรับเปิดของขวัญ
+        function openGift() {
+            const surpriseBox = document.getElementById('surpriseBox');
+            if (surpriseBox.style.display === 'none' || surpriseBox.style.display === '') {
+                surpriseBox.style.display = 'block';
+                setTimeout(() => {
+                    document.getElementById('secondGiftSection').style.display = 'block';
+                }, 500);
+            }
+        }
+
+        // ฟังก์ชันสำหรับเปิดของขวัญกล่องที่ 2
+        function openSecondGift() {
+            const secondSurpriseBox = document.getElementById('secondSurpriseBox');
+            if (secondSurpriseBox.style.display === 'none' || secondSurpriseBox.style.display === '') {
+                secondSurpriseBox.style.display = 'block';
+                setTimeout(() => {
+                    document.getElementById('thirdGiftSection').style.display = 'block';
+                }, 500);
+            }
+        }
+        
+        // ฟังก์ชันสำหรับเปิดของขวัญกล่องที่ 3
+        function openThirdGift() {
+            const thirdSurpriseBox = document.getElementById('thirdSurpriseBox');
+            if (thirdSurpriseBox.style.display === 'none' || thirdSurpriseBox.style.display === '') {
+                thirdSurpriseBox.style.display = 'block';
+                setTimeout(() => {
+                    document.getElementById('fourthGiftSection').style.display = 'block';
+                }, 500);
+            }
+        }
+
+        // ฟังก์ชันสำหรับเปิดของขวัญกล่องที่ 4
+        function openFourthGift() {
+            const fourthSurpriseBox = document.getElementById('fourthSurpriseBox');
+            if (fourthSurpriseBox.style.display === 'none' || fourthSurpriseBox.style.display === '') {
+                fourthSurpriseBox.style.display = 'block';
+            }
+        }
+
+        // สร้างฝนอีโมจิ
+        function createEmojiRain() {
+            const emojis = ['🌸', '💖', '💐', '💕',];
+            const emoji = document.createElement('div');
+            emoji.classList.add('emoji-rain');
+            emoji.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
+            emoji.style.left = Math.random() * 100 + 'vw';
+            emoji.style.animationDuration = Math.random() * 3 + 2 + 's';
+            emoji.style.fontSize = Math.random() * 20 + 25 + 'px';
+            document.body.appendChild(emoji);
+            setTimeout(() => emoji.remove(), 5000);
+        }
+        
+        // เมื่อเปิดหน้าหลักแล้ว ให้เริ่มฝนอีโมจิ
+        document.getElementById('openCardBtn').addEventListener('click', () => {
+            // ... (โค้ดส่วนเดิม)
+            setTimeout(() => {
+                // ... (โค้ดส่วนเดิม)
+                setInterval(createEmojiRain, 500); // เริ่มฝนอีโมจิ
+            }, 800);
+        });
+
+        // เพิ่มการเปลี่ยนรูปใน photo frame
+        const photos = ['💐', '💝','🌸', ]; 
+        let currentPhotoIndex = 0;
+
+        function changePhoto() {
+            const photoFrame = document.getElementById('photoFrame');
+            currentPhotoIndex = (currentPhotoIndex + 1) % photos.length;
+            photoFrame.style.transform = 'scale(0.8)';
+            setTimeout(() => {
+                photoFrame.innerHTML = photos[currentPhotoIndex];
+                photoFrame.style.transform = 'scale(1)';
+            }, 300);
+        }
+        
+        document.getElementById('photoFrame').addEventListener('click', changePhoto);
+
+    </script>
+</body>
+</html>
